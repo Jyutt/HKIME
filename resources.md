@@ -8,6 +8,11 @@ https://pdfs.semanticscholar.org/1294/f49cf1a7397f0423ec617a78c7995139bc5b.pdf
 https://www.cis.uni-muenchen.de/~heike/papers/Interspeech2014_01.pdf 
 
 # Projects
+https://github.com/556556bt/HKCantonIME
+
+Existing Cantonese phonetic IME, but appears to be no longer maintained and
+source code is not available / could not be found
+
 https://github.com/fxsjy/jieba
 结巴, a word segementation algorithm for Chinese 
 
@@ -18,3 +23,5 @@ Open source pinyin IME
 https://www.ling.upenn.edu/courses/cogs502/Backoff.html
 Explanation of Backoff n-gram models
 
+http://technology.chtsai.org/charfreq/
+Frequency and Stroke Counts of Chinese Characters
