@@ -20,6 +20,9 @@ https://github.com/libpinyin/libpinyin
 Open source pinyin IME
 
 # Webpages
+l2r.cs.uiuc.edu/~danr/Teaching/CS546-09/lectures.html
+Very helpful set of lecture notes
+
 https://www.ling.upenn.edu/courses/cogs502/Backoff.html
 Explanation of Backoff n-gram models
 
