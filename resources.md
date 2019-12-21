@@ -8,9 +8,22 @@ https://pdfs.semanticscholar.org/1294/f49cf1a7397f0423ec617a78c7995139bc5b.pdf
 https://www.cis.uni-muenchen.de/~heike/papers/Interspeech2014_01.pdf 
 
 # Projects
+
+### RIME 輸入法
+https://github.com/rime/librime
+
+General Chinese Input Method Engine framework that allows for rapid prototyping.
+Could be project goal to write our IME with this framework.
+
+### RIME-jyutping
+https://github.com/rime/rime-jyutping
+
+Existing HK cantonese IME that mixes different romanizations of Cantonese.
+Built with RIME framework.
+
 https://github.com/556556bt/HKCantonIME
 
-Existing Cantonese phonetic IME, but appears to be no longer maintained and
+Another existing Cantonese phonetic IME, but appears to be no longer maintained and
 source code is not available / could not be found
 
 https://github.com/fxsjy/jieba
@@ -20,6 +33,10 @@ https://github.com/libpinyin/libpinyin
 Open source pinyin IME
 
 # Webpages
+
+### Linguistics Society of Hong Kong
+https://www.lshk.org
+
 l2r.cs.uiuc.edu/~danr/Teaching/CS546-09/lectures.html
 Very helpful set of lecture notes
 
