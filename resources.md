@@ -1,6 +1,12 @@
 This is a list of helpful research papers, sources, and projects that are relevant to the project
 
-# Papers 
+# Papers
+
+### Efficient Estimation of Word Representations in Vector Space
+https://arxiv.org/pdf/1301.3781v3.pdf
+Probably **the** most important paper here. The basis of neural net
+foundations in NLP.
+
 ### Neural Network Language Modelfor Chinese Pinyin Input Method Engine
 https://pdfs.semanticscholar.org/1294/f49cf1a7397f0423ec617a78c7995139bc5b.pdf
 
