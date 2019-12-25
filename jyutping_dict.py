@@ -1,5 +1,6 @@
 DEFAULT_DICT = "sources/JPTable-iso.txt"
 
+
 class JyutpingDict:
     def __init__(self, dict_path=DEFAULT_DICT):
         self.jyutdict = {}
@@ -10,12 +11,12 @@ class JyutpingDict:
         self.twoGramHead_freq = {}
 
         # Generate Dictionaries
-        self.gen_jyutdict(file_path=dict_path)
-        self.gen_prefixFreq()
-        self.gen_suffixFreq()
-        self.gen_twoGramFreq()
+        self._gen_jyutdict(file_path=dict_path)
+        self._gen_prefixFreq()
+        self._gen_suffixFreq()
+        self._gen_twoGramFreq()
 
-    def gen_jyutdict(self, file_path):
+    def _gen_jyutdict(self, file_path):
         self.total = 0  # Number of entries in the dict
         with open(file_path) as f:
             for line_no, line in enumerate(f, 1):
@@ -36,7 +37,7 @@ class JyutpingDict:
         print(f"Dictionary of {len(self.jyutdict)} Jyutpings mapping to", \
                 f"{self.total} different Chinese characters created")
 
-    def gen_prefixFreq(self):
+    def _gen_prefixFreq(self):
         if self.jyutdict:
             for jyutping in self.jyutdict.keys():
                 count = len(self.jyutdict[jyutping])
@@ -45,7 +46,7 @@ class JyutpingDict:
                 else:
                     self.prefix_freq[jyutping[0]] += count
 
-    def gen_suffixFreq(self):
+    def _gen_suffixFreq(self):
         if self.jyutdict:
             for jyutping in self.jyutdict.keys():
                 count = len(self.jyutdict[jyutping])
@@ -54,7 +55,7 @@ class JyutpingDict:
                 else:
                     self.suffix_freq[jyutping[-1]] += count
 
-    def gen_twoGramFreq(self):
+    def _gen_twoGramFreq(self):
         # Generates 2-gram frequencies
         if self.jyutdict:
             for jyutping in self.jyutdict.keys():
