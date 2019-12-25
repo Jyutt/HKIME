@@ -1,14 +1,20 @@
 from urllib.request import urlopen as uReq
 from bs4 import BeautifulSoup as soup
 
-my_url = 'http://www.fyan8.com/yueyu2/xt3.htm'
+my_url = 'https://zh-yue.wikipedia.org/wiki/%E7%B2%B5%E6%96%87%E7%B6%AD%E5%9F%BA%E7%99%BE%E7%A7%91'
 uClient = uReq(my_url)
 page_html = uClient.read()
 uClient.close()
 page_soup = soup(page_html, "html.parser", from_encoding="gb18030")
-containers = page_soup.find_all("td", "nrct")
-plaintext = containers[0]
-plaintext = str(plaintext).replace("<br/>","").replace("\n", "").replace("</td>","")
-aindex = plaintext.find("</a>") + 4
-plaintext = plaintext[aindex:]
-print(plaintext)
+
+def fyan8_parser():
+    for i in page_soup.select(".nrct"):
+        print (i.get_text().strip())
+def wikipedia_parser():
+    for i in page_soup.select('p'):
+        print(i.get_text().strip())
+
+if "wikipedia" in my_url:
+    wikipedia_parser()
+if "fyan" in my_url:
+    fyan8_parser()
