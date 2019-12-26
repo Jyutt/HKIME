@@ -13,6 +13,9 @@ https://pdfs.semanticscholar.org/1294/f49cf1a7397f0423ec617a78c7995139bc5b.pdf
 ### Comparing Approaches to Convert Recurrent Neural Networks into Backoff Language Models For Efficient Decoding
 https://www.cis.uni-muenchen.de/~heike/papers/Interspeech2014_01.pdf
 
+### Automatic Word Segmentation for Spoken Cantonese
+http://www2.lpl-aix.fr/~bigi/Doc/bigi2015ococosda.pdf
+
 ### Handling Massive N-grams Datasets Efficiently
 https://arxiv.org/pdf/1806.09447.pdf
 
