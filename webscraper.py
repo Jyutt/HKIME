@@ -23,15 +23,15 @@ def parser(my_url):
     return plaintext
 
 
-openFile = open("url_list.txt", "r") #reads a list of urls to scrape
-dataFile = open("traning_data.txt", "x") #creates a file to store data from url
+openFile = open("url_list.txt","r") #reads a list of urls to scrape
+dataFile = open("traning_data.txt","x") #creates a file to store data from url
 dataFile.close()
-dataFile = open("traning_data.txt", "a")
+dataFile = open("traning_data.txt","a",encoding="gb18030")
 my_url_list = openFile.read().split()
 for url in my_url_list:
-    my_url = url
-    dataFile.write(parser(my_url) + '\n\n')
-    
+	my_url = url
+	dataFile.write(parser(my_url) + '\n\n')
+
 openFile.close()
 dataFile.close()
 
