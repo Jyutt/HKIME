@@ -1,10 +1,14 @@
-from urllib.request import urlopen as uReq
+from urllib.request import urlopen
+from urllib.request import Request
 from bs4 import BeautifulSoup as soup
+import urllib.request
 
-my_url = 'https://zh-yue.wikipedia.org/wiki/%E7%B2%B5%E6%96%87%E7%B6%AD%E5%9F%BA%E7%99%BE%E7%A7%91'
-uClient = uReq(my_url)
-page_html = uClient.read()
-uClient.close()
+my_url = 'https://lihkg.com/thread/1797/page/1'
+
+class AppURLopener(urllib.request.FancyURLopener):
+    version = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 Firefox/71.0"
+opener = AppURLopener()
+page_html = opener.open(my_url).read()
 page_soup = soup(page_html, "html.parser", from_encoding="gb18030")
 
 def fyan8_parser():
@@ -13,8 +17,9 @@ def fyan8_parser():
 def wikipedia_parser():
     for i in page_soup.select('p'):
         print(i.get_text().strip())
-
-if "wikipedia" in my_url:
-    wikipedia_parser()
-if "fyan" in my_url:
-    fyan8_parser()
+def lihkg_parser():
+    containers = page_soup.find_all("div", class_ = "_3jxQCFWg9LDtkSkIVLzQ8L")
+    print(containers)
+    for i in page_soup.select("div._2cNsJna0_hV8tdMj3X6_gJ"):
+        print(i.get_text().strip())
+#lihkg parser does not work
