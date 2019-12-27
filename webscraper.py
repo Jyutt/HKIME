@@ -23,10 +23,8 @@ def parser(my_url):
     return plaintext
 
 
-openFile = open("url_list.txt","r") #reads a list of urls to scrape
-dataFile = open("traning_data.txt","x") #creates a file to store data from url
-dataFile.close()
-dataFile = open("traning_data.txt","a",encoding="gb18030")
+openFile = open("url_list.txt","r")
+dataFile = open("traning_data.txt","w",encoding="gb18030")
 my_url_list = openFile.read().split()
 for url in my_url_list:
 	my_url = url
@@ -34,4 +32,5 @@ for url in my_url_list:
 
 openFile.close()
 dataFile.close()
+
 
