@@ -27,10 +27,16 @@ class SentenceGraph:
         Generates the graph based on the list of Jyutping
 
         Args:
-            jyutping_list: List of individual Jyutping syllables corresponding to
-                    individual characters
-                    // tokenized pinyin e.g. ['pin', 'yin'....]
-					// assume there exists: def match() that returns list of kanto words, e.g. ['我'， ‘是’，。。。]
+            jyutping_list:
+                Tokenized list of Jyutping individual syllables
+                in preserved consequtive order
+                Ex: ["pin", "yin", "shu", "ru", "fa"] 
+
+        Notes:
+           JyutpingDict.match() to be implemented in the future
+           that returns list of Chinese characters
+           corresponding to the matching Jyutping single syllable
+           Ex: match("xin") -> ["心", "信", "欣", ...]
         """
 
     def viterbi(self, obsspace, statespace, initprobs, observations, transition, emission):
@@ -40,9 +46,9 @@ class SentenceGraph:
 
         Use Viterbi? Yes
 
-		-----Prototype (2-grams, dependant on only i-1 state where i is current state)-----
-        Example: Observed string:            wo shi xi zang ren 
-        		Optimal character string:   我  是  西  藏   人
+        -----Prototype (2-grams, dependant on only i-1 state where i is current state)-----
+        Example: Observed string (S):            wo shi xi zang ren 
+                 Word Sequence (W) that maximizes posterior P(W|S) :   我  是  西  藏   人
 
         @params
 
@@ -52,6 +58,7 @@ class SentenceGraph:
         	In other words, theres only one possible observation from 我, one from 是, etc.
 			
 			CHECK NOTE 1 FOR EXPLANATION ON KANTO PINYIN AMBIGUITY
+                        (Not a worry for now)
 
 
 		-statespace: the state space S = {s_1, s_2, ..., s_k}, a sequence of k states 
@@ -138,7 +145,7 @@ class SentenceGraph:
         	REPRESENTED WITH DIFFERENT PINYIN STRINGS. BUT ANYWAYS, WE'RE ONLY PREDICTING THE CHARACTER 
         	STRING IN THE END, SO WHAT PINYIN WE USE TO REPRESENT THAT CHARACTER DONT MATTER, i.e. 
         	observing 'wo' from 我 or 'weh' from it doesn't make a difference when we just want 我 anyways)
-			cOrReCt mE iF Im wrOnG
+			cOrReCt mE iF Im wrOnG (not a worry for now) 
 
 			2: INDEXING IN THE ABOVE EXAMPLES ALL START FROM 1 AND GOES TO THE LENGTH, BUT IN PRACTICE (CODE)
 			ALL INDEXES START FROM 0 AND GOES TO LENGTH - 1, so Y = (0, 1, 2, 3, 4) in reality
