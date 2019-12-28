@@ -16,6 +16,9 @@ https://www.cis.uni-muenchen.de/~heike/papers/Interspeech2014_01.pdf
 ### Handling Massive N-grams Datasets Efficiently
 https://arxiv.org/pdf/1806.09447.pdf
 
+### A Neural Probabilistic Language Model
+http://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf
+
 # Projects
 
 ### RIME 輸入法
