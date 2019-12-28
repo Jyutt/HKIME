@@ -42,7 +42,7 @@ class SentenceGraph:
 
 		-----Prototype (2-grams, dependant on only i-1 state where i is current state)-----
         Example: Observed string:            wo shi xi zang ren 
-        		 Optimal character string:   我  是  西  藏   人
+        		Optimal character string:   我  是  西  藏   人
 
         @params
 
