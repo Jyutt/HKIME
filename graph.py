@@ -10,7 +10,6 @@ class SentenceGraph:
         Args:
             jd: The JyutpingDict object that provides the mapping
                 from Jyutping to valid possible characters
-                //pinyin to character
 
             distr: Dictionary representing trigram distribution
                 (maybe we need to create a distribution class?
@@ -19,7 +18,7 @@ class SentenceGraph:
         """
         self._jyutping_dict = jyutping_dict
         self._distr = distr
-        self.graph = []
+        # self.graph = []
         self.jyutping_list = []
 
     def generate(self, jyutping_list):
