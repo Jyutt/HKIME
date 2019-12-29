@@ -51,7 +51,7 @@ class SentenceGraph:
         # statespace = ['拼', '品', ..., '书', '输', '熟', ..., '发']
         statespace = []
         for obs in jyutping_list:
-            statespace += match(obs)  
+            statespace += list(match(obs))  
 
         """ 
         Probabilities of the first character of the observed string (in this ex. the obs. string
@@ -75,7 +75,7 @@ class SentenceGraph:
         emission = [[0 for j in range(N)] for i in range(K)]
         for i in range(K):
             for j in range(N):
-                if statespace[i] in match(obsspace[j]):  # check if state i is in match(obs. j)
+                if statespace[i] in list(match(obsspace[j])):  # check if state i is in match(obs. j)
                     emission[i][j] = 1  # if yes, Pr(state i emits obs j) = 1
                     break
 
