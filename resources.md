@@ -7,6 +7,12 @@ https://arxiv.org/pdf/1301.3781v3.pdf
 Probably **the** most important paper here. The basis of neural net
 foundations in NLP.
 
+### Overview of the Continuous Space Language Model
+http://cslt.riit.tsinghua.edu.cn/mediawiki/images/f/f3/Cslm-cslt.pdf
+
+PDF of a presentation detailing the Continuous Space Language Model (CSLM), which
+includes a section on the NNLM that we are trying to implement
+
 ### Neural Network Language Modelfor Chinese Pinyin Input Method Engine
 https://pdfs.semanticscholar.org/1294/f49cf1a7397f0423ec617a78c7995139bc5b.pdf
 
@@ -18,6 +24,9 @@ http://www2.lpl-aix.fr/~bigi/Doc/bigi2015ococosda.pdf
 
 ### Handling Massive N-grams Datasets Efficiently
 https://arxiv.org/pdf/1806.09447.pdf
+
+### A Neural Probabilistic Language Model
+http://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf
 
 # Projects
 
