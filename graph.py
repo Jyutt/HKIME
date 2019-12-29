@@ -24,7 +24,12 @@ class SentenceGraph:
 
     def generate(self, jyutping_list):
         """
-        Generates the graph based on the list of Jyutping
+        XXXGenerates the graph based on the list of Jyutping
+        ---Generate the inputs to the viterbi algorithm and calls it, 
+            returns the result of the call to viterbi
+
+        Note: This function only needs to construct the inputs for the viterbi method, which might
+        or might not end up requiring us to construct a full-blown graph out of nodes
 
         Args:
             jyutping_list:
@@ -37,7 +42,47 @@ class SentenceGraph:
            that returns list of Chinese characters
            corresponding to the matching Jyutping single syllable
            Ex: match("xin") -> ["心", "信", "欣", ...]
+
         """
+
+        # obsspace = list of all unique pinyins from jyutping_list
+        obsspace = list(set(jyutping_list))
+        N = len(obsspace)
+
+        # statespace = ['拼', '品', ..., '书', '输', '熟', ..., '发']
+        statespace = []
+        for obs in jyutping_list:
+            statespace += match(obs)  
+
+        """ 
+        Probabilities of the first character of the observed string (in this ex. the obs. string
+        is ["pin", "yin", "shu", "ru", "fa"]) being some character in the state space, so 
+        the non-zero portion of this array comes from the language model, while the rest of
+        the elements is zero (see initprobs description under viterbi function for more info)
+        """
+        initprobs = []
+
+        # observations = [0, 1, 2, ..., len(obsspace) - 1]
+        observations = [*range(N)]
+
+        """
+        this input should come from the language model as well 
+        (see transition description under viterbi function for more info)
+        """
+        transition = []
+
+
+        # there should be at least one '1' for every row (state) in the emission matrix
+        emission = [[0 for j in range(N)] for i in range(K)]
+        for i in range(K):
+            for j in range(N):
+                if statespace[i] in match(obsspace[j]):  # check if state i is in match(obs. j)
+                    emission[i][j] = 1  # if yes, Pr(state i emits obs j) = 1
+                    break
+
+
+        return viterbi(obsspace, statespace, initprobs, observations, transition, emission)
+
 
     def viterbi(self, obsspace, statespace, initprobs, observations, transition, emission):
         """
