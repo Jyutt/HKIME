@@ -3,6 +3,57 @@ DEFAULT_DICT = "sources/JPTable-iso.txt"
 
 class JyutpingDict:
     def __init__(self, dict_path=DEFAULT_DICT):
+        self._dict_path = dict_path
+        self.jyutdict = {}
+        self.reverse_lookup = {}
+
+        self._load_dict()
+        self._cache_jyut()
+
+    def _load_dict(self):
+        with open(self._dict_path) as f:
+            for line_no, line in enumerate(f, 1):
+                try:
+                    utf_num, character, jyutping = line.split()[:3]
+
+                    # Insert into Jyutping Dictionary
+                    if jyutping[:-1] not in self.jyutdict:
+                        self.jyutdict[jyutping[:-1]] = [character]
+                    else:
+                        self.jyutdict[jyutping[:-1]].append(character)
+
+                    # Insert into reverse lookup table
+                    if character not in self.reverse_lookup:
+                        self.reverse_lookup[character] = [jyutping]
+                    else:
+                        self.reverse_lookup[character].append(jyutping)
+                except ValueError:
+                    raise ValueError(
+                            f"Invalid entry in {self._dict_path} \
+                                in line {line_no}")
+
+    def jyut2char(self, jyutping):
+        if jyutping in self.jyutdict:
+            return self.jyutdict[jyutping]
+        else:
+            return []
+
+    def char2jyut(self, character):
+        if character not in self.reverse_lookup:
+            raise ValueError("Character is not in reverse look up table")
+        return self.reverse_lookup[character]
+
+    def match(self, pattern):
+        p_len = len(pattern)
+        matches = filter(
+                lambda x: x[:p_len] == pattern,
+                self.jyutdict.keys())
+        for m in matches:
+            yield self.jyutdict[m]
+
+
+class JyutpingStats:
+    def __init__(self, dict_path=DEFAULT_DICT):
         self.jyutdict = {}
         self.prefix_freq = {}
         self.suffix_freq = {}
