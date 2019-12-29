@@ -6,24 +6,31 @@ def get_response(url):
 	R = S.get(url=url)
 	return R.json()
 
-nextWiki = '%21'
+nextWiki = ''
+breakLoop = False
+
 dataFile = open("url_list.txt","w",encoding="gb18030")
-dataFile.close
-while nextWiki != '':
+
+while True:
 	apfromstr = '&apfrom=' + nextWiki
-	url = 'https://zh-yue.wikipedia.org/w/api.php?action=query&list=allpages&format=json&aplimit=500' + apfromstr
+	url = 'https://zh-yue.wikipedia.org/w/api.php?action=query&list=allpages&format=json&apminsize=10000&aplimit=500' + apfromstr
 
 	DATA = get_response(url)
 	PAGES = DATA["query"]["allpages"]
-	NEXTWIKI = DATA["continue"]["apcontinue"]
-
+	if DATA.get("continue") != None:
+		NEXTWIKI = DATA.get("continue")["apcontinue"]
+	else:
+		breakLoop = True
+		nextWiki = ''
 	dataFile = open("url_list.txt","a",encoding="gb18030")
 	for page in PAGES:
 		wikiUrl = 'https://zh-yue.wikipedia.org/wiki/'
 		wikiUrl = wikiUrl + page["title"]
 		url = urllib.parse.quote(wikiUrl.encode('utf8'), ':/')
 		dataFile.write(url + '\n')
-	nextWiki = NEXTWIKI	
-
+		nextWiki = NEXTWIKI	
+	if breakLoop:
+		break
+	
 
 dataFile.close()
