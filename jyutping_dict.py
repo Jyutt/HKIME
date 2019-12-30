@@ -8,7 +8,6 @@ class JyutpingDict:
         self.reverse_lookup = {}
 
         self._load_dict()
-        self._cache_jyut()
 
     def _load_dict(self):
         with open(self._dict_path) as f:
