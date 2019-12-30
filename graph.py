@@ -16,7 +16,7 @@ class SentenceGraph:
                 // do this later
 
         """
-        self._jyutping_dict = jyutping_dict
+        # self._jyutping_dict = jyutping_dict
         self._distr = distr
         # self.graph = []
         self.jyutping_list = []
@@ -45,13 +45,18 @@ class SentenceGraph:
         """
 
         # obsspace = list of all unique pinyins from jyutping_list
+        self.jyutping_list = jyutping_list
         obsspace = list(set(jyutping_list))
         N = len(obsspace)
 
         # statespace = ['拼', '品', ..., '书', '输', '熟', ..., '发']
         statespace = []
+        no_of_states_for_first_obs = 0
         for obs in jyutping_list:
-            statespace += list(match(obs))  
+            temp = list(match(obs))
+            if statespace == 0: 
+                no_of_states_for_first_obs = len(temp)
+            statespace += temp
 
         """ 
         Probabilities of the first character of the observed string (in this ex. the obs. string
@@ -59,10 +64,14 @@ class SentenceGraph:
         the non-zero portion of this array comes from the language model, while the rest of
         the elements is zero (see initprobs description under viterbi function for more info)
         """
-        initprobs = []
+        initprobs = [0 for i in range(k)]
+        for i in range(no_of_states_for_first_obs):
+            initprobs[i] = posterior(w, prior)   
+
 
         # observations = [0, 1, 2, ..., len(obsspace) - 1]
         observations = [*range(N)]
+
 
         """
         this input should come from the language model as well 
