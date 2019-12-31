@@ -38,7 +38,7 @@ class Distribution():
         return:
             P(w | prior)
         """
-        assert len(w) == 1 and len(prior) == 2
+        assert len(w) == 1 and len(prior) == self.n - 1
 
         if prior in self.counter:
             total = sum(self.counter[prior].values())
