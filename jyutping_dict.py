@@ -39,7 +39,8 @@ class JyutpingDict:
 
     def char2jyut(self, character):
         if character not in self.reverse_lookup:
-            raise ValueError("Character is not in reverse look up table")
+            return f"{character} not found"
+            # raise ValueError("Character is not in reverse look up table")
         return self.reverse_lookup[character]
 
     def match(self, pattern):
@@ -47,8 +48,11 @@ class JyutpingDict:
         matches = filter(
                 lambda x: x[:p_len] == pattern,
                 self.jyutdict.keys())
-        for m in matches:
-            yield self.jyutdict[m]
+        return list(matches)
+        
+        # Debugging purposes, will try to reuse generators later 
+        #for m in matches:
+        #    yield self.jyutdict[m]
 
 
 class JyutpingStats:

@@ -38,27 +38,32 @@ class SentenceGraph:
             transition[s_i][s_j]: Pr(s_i | s_j) where s_i and s_j are
                 the indicies that correspond to the two characters in
                 state_map
-        """ 
-        jyut_l = self.jyutping_list
-        self.state_space = list(map(self.jd.match, jyut_l))
-        self.init_probs = np.array(map(self.distr.prob, state_space[0]))
-        self.state_map = list({s for s in l for l in self.state_space})
-        self.reverse_map = {s : idx for idx,s in enumerate(self.state_map)}
+        """
+        self.jyutping_list = jyutping_list
+        jyut_l = jyutping_list
+        self.state_space = list(map(self.jd.jyut2char, jyutping_list))
+        tmpset = set()
+        for state in self.state_space:
+            for ch in state:
+                tmpset.add(ch)
+        self.state_map = list(tmpset)
+        self.reverse_map = {s: idx for idx, s in enumerate(self.state_map)}
+        self.init_probs = np.array(list(map(self.distr.prob, self.state_map)))
 
-        N,M = len(jl), len(self.state_map)
+        N,M = len(jyut_l), len(self.state_map)
         self.emission = np.zeros((N,M))
         for i in range(M):
             for j in range(N):
                 ch = self.state_map[i]
                 if ch in self.jd.jyut2char(jyut_l[j]):
                     self.emission[j][i] = 1
-        
-        self.transition = np.ndarray((M,M))
+
+        self.transition = np.ndarray((M,M), dtype="float")
         for i in range(M):
             for j in range(M):
-                s_i, s_j = self.state_map(i), self.state_map(j)
-                self.transition[i][j] = self.distr.posterior(s_i, s_j) 
-        
+                s_i, s_j = self.state_map[i], self.state_map[j]
+                self.transition[i][j] = self.distr.posterior(s_i, s_j)
+       
     def viterbi(self):
         """
         Returns the word sequence to the MAP of the HMM,
@@ -91,8 +96,8 @@ class SentenceGraph:
             T2: array (K, T)
                 the x_j-1 of the most likely path so far
         """
-        A = self.transition
-        B = self.emission
+        A = self.transition . T
+        B = self.emission . T
         # Cardinality of the state space
         K = A.shape[0]
         # Initialize the priors with default (uniform dist) if not given by caller
