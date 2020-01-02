@@ -4,7 +4,7 @@ HKIME is an on-going project that aims to create an Input Method Editor for Cant
 Progress is documented in the Jupyter Notebooks located under the directory `notebooks`.
 
 Our latest milestone is a simple bi-gram based statistical language model with
-no smoothing from a corpus made from scraping Cantonsee Wikipedia. We are currently
+no smoothing from a corpus made from scraping Cantonese Wikipedia. We are currently
 working on training a NN-based language model.
 
 Relevant papers and sources that have tremendously aided our progress are in
