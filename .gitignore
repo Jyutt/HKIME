@@ -1,4 +1,5 @@
 __pycache__/
 sources/
-.ipynb_checkpoints/
+*.ipynb_checkpoints
 *.swp
+*.log
