@@ -4,7 +4,7 @@ import numpy as np
 class SentenceGraph:
     """
     TODO: Go back and optimize with numpy
-    """ 
+    """
     def __init__(self, jd, distr):
         """
         Initializes SentenceGraph with a Jyutping dictionary
@@ -14,8 +14,8 @@ class SentenceGraph:
             jd: The JyutpingDict object that provides the mapping
                 from Jyutping to valid possible characters
 
-            distr: Distribution object representing the n-gram distribution 
-        """ 
+            distr: Distribution object representing the n-gram distribution
+        """
         self.jd = jd
         self.distr = distr
 
@@ -29,15 +29,23 @@ class SentenceGraph:
                 List of consecutive Jyutping syllables
                 Ex: ["pin", "yin", "shu", "ru", "fa"]
         Variables:
-            state_space: List of lists of all possible states at each index
-                eg. [['拼','品', ...,],['书', '输', '熟', ...],['发', ...],...] 
-            init_probs: Probabilities of the initial possible states
-            state_map: List providing map from index to character
-            reverse_map: Dict mapping from character to index in state_map
-            emission[i][j]: Pr(obs j | state i), values are 0 or 1
-            transition[s_i][s_j]: Pr(s_i | s_j) where s_i and s_j are
-                the indicies that correspond to the two characters in
-                state_map
+            state_space:
+                List of lists of all possible states at each index
+                eg. [['拼','品', ...,],['书', '输', '熟', ...],['发', ...],...]
+
+            init_probs:
+                Probabilities of the initial possible states
+
+            state_map:
+                List providing map from index to character
+
+            reverse_map:
+                Dict mapping from character to index in state_map
+
+            emission[i][j]:
+                Pr(obs j | state i), values are 0 or 1
+                transition[s_i][s_j]: Pr(s_i | s_j) where s_i and s_j are
+                the indicies that correspond to the two characters in state_map
         """
         self.jyutping_list = jyutping_list
         jyut_l = jyutping_list
@@ -63,17 +71,17 @@ class SentenceGraph:
             for j in range(M):
                 s_i, s_j = self.state_map[i], self.state_map[j]
                 self.transition[i][j] = self.distr.posterior(s_i, s_j)
-       
+
     def viterbi(self):
         """
         Returns the word sequence to the MAP of the HMM,
         equivalent to finding the optimal path on trelli graph.
-        
+
         Heavily and shamelessly inspired by (thanks in advance):
             https://stackoverflow.com/questions/9729968/python-implementation-of-viterbi-algorithm
             user: RBF06
 
-        Parametetrs:
+        Parameters:
             y : array (M,)
                 Observation state sequence. int dtype.
             A : array (K, K)
