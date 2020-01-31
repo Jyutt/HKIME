@@ -1,9 +1,12 @@
 from jyutping_dict import JyutpingDict
+from functools import reduce
 import numpy as np
 
 class SentenceGraph:
     """
-    TODO: Go back and optimize with numpy
+    TODO: Convert examples from pinyin to jyutping.
+    Potentially make viterbi algorithm more efficient
+    since impossible state transitions are included.
     """
     def __init__(self, jd, distr):
         """
@@ -27,50 +30,55 @@ class SentenceGraph:
         Args:
             jyutping_list:
                 List of consecutive Jyutping syllables
-                Ex: ["pin", "yin", "shu", "ru", "fa"]
-        Variables:
-            state_space:
-                List of lists of all possible states at each index
-                eg. [['拼','品', ...,],['书', '输', '熟', ...],['发', ...],...]
-
+                Ex: ["jyut", "ping", "syu", "jap", "faat"]
+        self Variables:
             init_probs:
                 Probabilities of the initial possible states
 
             state_map:
                 List providing map from index to character
+                Ex: state_map[2] = "粤"
 
             reverse_map:
                 Dict mapping from character to index in state_map
+                Ex: reverse_map["粤"] = 2
 
             emission[i][j]:
-                Pr(obs j | state i), values are 0 or 1
-                transition[s_i][s_j]: Pr(s_i | s_j) where s_i and s_j are
+                Pr(obs j | state i), takes on values of 0 or 1
+                Ex: Pr("jyut", "粤") = 1, Pr("ping", "粤") = 0
+
+            transition[s_i][s_j]:
+                Pr(s_i | s_j) where s_i and s_j are
                 the indicies that correspond to the two characters in state_map
         """
         self.jyutping_list = jyutping_list
         jyut_l = jyutping_list
-        self.state_space = list(map(self.jd.jyut2char, jyutping_list))
-        tmpset = set()
-        for state in self.state_space:
-            for ch in state:
-                tmpset.add(ch)
-        self.state_map = list(tmpset)
-        self.reverse_map = {s: idx for idx, s in enumerate(self.state_map)}
-        self.init_probs = np.array(list(map(self.distr.prob, self.state_map)))
+        states = list(set(
+            reduce(lambda x,y: x + y, map(self.jd.jyut2char, jyutping_list))))
 
-        N,M = len(jyut_l), len(self.state_map)
-        self.emission = np.zeros((N,M))
-        for i in range(M):
-            for j in range(N):
-                ch = self.state_map[i]
-                if ch in self.jd.jyut2char(jyut_l[j]):
-                    self.emission[j][i] = 1
+        if self.distr.n == 2:
+            self.state_map = states
+            self.reverse_map = {s: idx for idx, s in enumerate(self.state_map)}
+            self.init_probs = np.array(list(map(self.distr.prob, self.state_map)))
 
-        self.transition = np.ndarray((M,M), dtype="float")
-        for i in range(M):
-            for j in range(M):
-                s_i, s_j = self.state_map[i], self.state_map[j]
-                self.transition[i][j] = self.distr.posterior(s_i, s_j)
+            N,M = len(jyut_l), len(self.state_map)
+            self.emission = np.zeros((N,M))
+            for i in range(M):
+                for j in range(N):
+                    ch = self.state_map[i]
+                    if ch in self.jd.jyut2char(jyut_l[j]):
+                        self.emission[j][i] = 1
+
+            self.transition = np.ndarray((M,M), dtype="float")
+            for i in range(M):
+                for j in range(M):
+                    s_i, s_j = self.state_map[i], self.state_map[j]
+                    self.transition[i][j] = self.distr.posterior(s_i, s_j)
+        else if self.distr.n == 3:
+            pass
+        else:
+            raise ValueError("N-grams for n > 3 unfortunately not currently supported")
+
 
     def viterbi(self):
         """
