@@ -2,6 +2,7 @@ from jyutping_dict import JyutpingDict
 from functools import reduce
 import numpy as np
 
+
 class SentenceGraph:
     """
     TODO: Convert examples from pinyin to jyutping.
@@ -37,47 +38,82 @@ class SentenceGraph:
 
             state_map:
                 List providing map from index to character
-                Ex: state_map[2] = "粤"
+                Ex: 
+                    2-grams case: state_map[2] = "粤"
+                    3-grams case: state_map[3] = "粵拼"
 
             reverse_map:
                 Dict mapping from character to index in state_map
-                Ex: reverse_map["粤"] = 2
+                Ex: 
+                    2-grams case: reverse_map["粤"] = 2
+                    3-grams case: reverse_map["粵拼"] = 3
 
             emission[i][j]:
                 Pr(obs j | state i), takes on values of 0 or 1
-                Ex: Pr("jyut", "粤") = 1, Pr("ping", "粤") = 0
+                Ex:
+                    2-grams case: Pr("jyut", "粤") = 1, Pr("ping", "粤") = 0
+                    3-grams case: Pr("jyut ping" | "粤拼“) = 1, Pr("ping syu", "粤语") = 0
 
             transition[s_i][s_j]:
-                Pr(s_i | s_j) where s_i and s_j are
-                the indicies that correspond to the two characters in state_map
+                Transition probability Pr(c_i | c_j) where c_k denotes state_map[k]
+                Ex:
+                   2-grams case:
+                       transition[8][2] = Pr(state_map[8] | state_map[2]) = Pr("拼" | "粵") = 0.33
+                   3-grams case:
+                       transition[9][3] = Pr(state_map[9] | state_map[3])
+                           = Pr("輸入" | "粵拼") = 0
+                       tranisition[10][3] = Pr(state_map[10] | state_map[3])
+                          = Pr("拼輸" | "粵拼") = 0.10
+        TODO: Generalize for arbitrary n for n-grams
+              Lint lint lint lint
         """
         self.jyutping_list = jyutping_list
         jyut_l = jyutping_list
-        states = list(set(
-            reduce(lambda x,y: x + y, map(self.jd.jyut2char, jyutping_list))))
+        states = list(set(reduce(lambda x, y: x + y, map(self.jd.jyut2char, jyutping_list))))
 
         if self.distr.n == 2:
             self.state_map = states
             self.reverse_map = {s: idx for idx, s in enumerate(self.state_map)}
             self.init_probs = np.array(list(map(self.distr.prob, self.state_map)))
 
-            N,M = len(jyut_l), len(self.state_map)
-            self.emission = np.zeros((N,M))
+            N, M = len(jyut_l), len(self.state_map)
+            self.emission = np.zeros((N, M))
             for i in range(M):
                 for j in range(N):
                     ch = self.state_map[i]
                     if ch in self.jd.jyut2char(jyut_l[j]):
                         self.emission[j][i] = 1
 
-            self.transition = np.ndarray((M,M), dtype="float")
+            self.transition = np.ndarray((M, M), dtype="float")
             for i in range(M):
                 for j in range(M):
                     s_i, s_j = self.state_map[i], self.state_map[j]
                     self.transition[i][j] = self.distr.posterior(s_i, s_j)
-        else if self.distr.n == 3:
-            pass
+        elif self.distr.n == 3:
+            self.state_map = [a + b for a in states for b in states]
+            self.reverse_map = {s: idx for idx, s in enumerate(self.state_map)}
+            self.init_probs = np.array(list(map(self.distr.prob, self.state_map)))
+
+            N, M = len(jyut_l) - 1, len(self.state_map)
+            self.emission = np.zeros((N, M))
+
+            prev_match = self.state_map[0][0] in self.jd.jyut2char(jyut_l[0])
+            for i in range(M):
+                for j in range(N):
+                    cur_match = self.state_map[i][1] in self.jd.jyut2char(jyut_l[i + 1]) # 2nd char
+                    if prev_match and cur_match:
+                        self.emission[j][i] = 1
+                    prev_match = cur_match
+
+            self.transition = np.ndarray((M, M), dtype="float")
+            for i in range(M):
+                for j in range(M):
+                    s_i, s_j = self.state_map[i], self.state_map[j]
+                    self.transition[i][j] = self.distr.posterior(s_i, s_j)
+
         else:
-            raise ValueError("N-grams for n > 3 unfortunately not currently supported")
+            raise ValueError("n-grams for n > 3 is not currently supported unfortunately.\
+                    Use n = 2 or 3 in self.distr.")
 
 
     def viterbi(self):
@@ -87,7 +123,6 @@ class SentenceGraph:
 
         Heavily and shamelessly inspired by (thanks in advance):
             https://stackoverflow.com/questions/9729968/python-implementation-of-viterbi-algorithm
-            user: RBF06
 
         Parameters:
             y : array (M,)
@@ -98,8 +133,8 @@ class SentenceGraph:
             B : array (K, M)
                 Emission matrix. See HiddenMarkovModel.emission for details.
             Pi: optional, (K,)
-                Initial state probabilities: Pi[i] is the probability x[0] == i. If
-                None, uniform initial distribution is assumed (Pi[:] == 1/K).
+                Initial state probabilities: Pi[i] is the probability x[0] == i.
+                If None, uniform initial distribution is assumed (Pi[:] == 1/K).
 
             Returns
             -------
@@ -114,9 +149,7 @@ class SentenceGraph:
         """
         A = self.transition . T
         B = self.emission . T
-        # Cardinality of the state space
-        K = A.shape[0]
-        # Initialize the priors with default (uniform dist) if not given by caller
+        K = A.shape[0]  # Cardinality of the state space
         Pi = self.init_probs
         T = len(self.jyutping_list)
         T1 = np.empty((K, T), 'd')
