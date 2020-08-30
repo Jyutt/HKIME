@@ -22,7 +22,7 @@ def wiki_quotes_eraser(plaintext, amount):
 def parser(my_url):
     plaintext = ''
     page_html = opener.open(my_url).read()
-    page_soup = soup(page_html, "html.parser", from_encoding="gb18030")
+    page_soup = soup(page_html, "html.parser", from_encoding="utf-8")
     amount_of_quotes = len(page_soup.find_all("span", "mw-cite-backlink"))
     if "wikipedia" or "appledaily" in my_url:
         for i in page_soup.select('p'):
